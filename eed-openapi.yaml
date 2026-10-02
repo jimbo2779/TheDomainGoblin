@@ -1,0 +1,2207 @@
+openapi: 3.1.0
+info:
+  title: Easy Expired Domains Domain Search API
+  version: 1.0.0
+  summary: Agency access to the live EED Manticore domain index
+  description: |
+    Version 1 of the EED Domain Search API. A successful search page consumes
+    one search from the Agency member's API-only daily allowance, including a
+    page with no matches. All keys for one member share that allowance.
+    Authentication, validation, rate-limit, and server errors consume no search.
+  contact:
+    email: support@easyexpireddomains.com
+  license:
+    name: Easy Expired Domains Terms of Service
+    url: https://easyexpireddomains.com/terms
+externalDocs:
+  description: Agency API access, examples, and key management
+  url: https://easyexpireddomains.com/api-access
+servers:
+  - url: https://easyexpireddomains.com
+    description: Production
+tags:
+  - name: Domain Search
+    description: Search current auction, buy-now, expiring, and expired-domain inventory.
+security:
+  - BearerAuth: []
+  - EedApiKey: []
+paths:
+  /api/v1/domain-search.php:
+    get:
+      tags:
+        - Domain Search
+      operationId: searchDomainsJsonGet
+      summary: Search domains and return metrics as JSON
+      description: |
+        Searches the active Manticore index. Unknown, duplicate, malformed, or
+        out-of-range parameters are rejected rather than ignored or clamped.
+      parameters:
+        - $ref: '#/components/parameters/Q'
+        - $ref: '#/components/parameters/Keyword'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Type'
+        - $ref: '#/components/parameters/Provider'
+        - $ref: '#/components/parameters/Tld'
+        - $ref: '#/components/parameters/Sort'
+        - $ref: '#/components/parameters/Dir'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/JsonPageSize'
+        - $ref: '#/components/parameters/JsonLimit'
+        - $ref: '#/components/parameters/MinTF'
+        - $ref: '#/components/parameters/MaxTF'
+        - $ref: '#/components/parameters/MinCF'
+        - $ref: '#/components/parameters/MaxCF'
+        - $ref: '#/components/parameters/MinBL'
+        - $ref: '#/components/parameters/MinRD'
+        - $ref: '#/components/parameters/MinTTF'
+        - $ref: '#/components/parameters/TtfTopic'
+        - $ref: '#/components/parameters/MinMajEdu'
+        - $ref: '#/components/parameters/MinMajGov'
+        - $ref: '#/components/parameters/MinMajIPs'
+        - $ref: '#/components/parameters/MinDA'
+        - $ref: '#/components/parameters/MaxDA'
+        - $ref: '#/components/parameters/MinPA'
+        - $ref: '#/components/parameters/MaxPA'
+        - $ref: '#/components/parameters/MaxSpam'
+        - $ref: '#/components/parameters/MinMozRank'
+        - $ref: '#/components/parameters/MinMozTrust'
+        - $ref: '#/components/parameters/MinDDLinks'
+        - $ref: '#/components/parameters/MinDDPages'
+        - $ref: '#/components/parameters/MinDDDofollow'
+        - $ref: '#/components/parameters/MinDDEdu'
+        - $ref: '#/components/parameters/MinDDGov'
+        - $ref: '#/components/parameters/MinSemTraffic'
+        - $ref: '#/components/parameters/MinSemRank'
+        - $ref: '#/components/parameters/MaxSemRank'
+        - $ref: '#/components/parameters/MinSemLinks'
+        - $ref: '#/components/parameters/MinSemKeywords'
+        - $ref: '#/components/parameters/MinAge'
+        - $ref: '#/components/parameters/MaxAge'
+        - $ref: '#/components/parameters/MinNameLength'
+        - $ref: '#/components/parameters/MaxNameLength'
+        - $ref: '#/components/parameters/ContainsLetters'
+        - $ref: '#/components/parameters/ContainsNumbers'
+        - $ref: '#/components/parameters/ContainsHyphen'
+        - $ref: '#/components/parameters/MinPrice'
+        - $ref: '#/components/parameters/MaxPrice'
+        - $ref: '#/components/parameters/MinBids'
+        - $ref: '#/components/parameters/MinAuctionTraffic'
+        - $ref: '#/components/parameters/MinValuation'
+        - $ref: '#/components/parameters/MinRevenue'
+        - $ref: '#/components/parameters/AuctionType'
+        - $ref: '#/components/parameters/GodaddyListingType'
+        - $ref: '#/components/parameters/AuctionEnd'
+        - $ref: '#/components/parameters/SpecialOption'
+        - $ref: '#/components/parameters/IncludeRegisterLinks'
+        - $ref: '#/components/parameters/Registrar'
+      responses:
+        '200':
+          $ref: '#/components/responses/JsonSearchSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateOrCreditLimit'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+    post:
+      tags:
+        - Domain Search
+      operationId: searchDomainsJsonPost
+      summary: Search domains and return metrics as JSON
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonSearchRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JsonSearchRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/JsonSearchSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+        '429':
+          $ref: '#/components/responses/RateOrCreditLimit'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /api/v1/domain-search.txt.php:
+    get:
+      tags:
+        - Domain Search
+      operationId: searchDomainsTextGet
+      summary: Search domains and return one domain per line
+      description: |
+        Uses a domain-only Manticore query. Successful responses are UTF-8 plain
+        text. Error responses are one plain-text line in `error_code: message`
+        form. Registration-link parameters are not accepted.
+      parameters:
+        - $ref: '#/components/parameters/Q'
+        - $ref: '#/components/parameters/Keyword'
+        - $ref: '#/components/parameters/Source'
+        - $ref: '#/components/parameters/Type'
+        - $ref: '#/components/parameters/Provider'
+        - $ref: '#/components/parameters/Tld'
+        - $ref: '#/components/parameters/Sort'
+        - $ref: '#/components/parameters/Dir'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/TextPageSize'
+        - $ref: '#/components/parameters/TextLimit'
+        - $ref: '#/components/parameters/MinTF'
+        - $ref: '#/components/parameters/MaxTF'
+        - $ref: '#/components/parameters/MinCF'
+        - $ref: '#/components/parameters/MaxCF'
+        - $ref: '#/components/parameters/MinBL'
+        - $ref: '#/components/parameters/MinRD'
+        - $ref: '#/components/parameters/MinTTF'
+        - $ref: '#/components/parameters/TtfTopic'
+        - $ref: '#/components/parameters/MinMajEdu'
+        - $ref: '#/components/parameters/MinMajGov'
+        - $ref: '#/components/parameters/MinMajIPs'
+        - $ref: '#/components/parameters/MinDA'
+        - $ref: '#/components/parameters/MaxDA'
+        - $ref: '#/components/parameters/MinPA'
+        - $ref: '#/components/parameters/MaxPA'
+        - $ref: '#/components/parameters/MaxSpam'
+        - $ref: '#/components/parameters/MinMozRank'
+        - $ref: '#/components/parameters/MinMozTrust'
+        - $ref: '#/components/parameters/MinDDLinks'
+        - $ref: '#/components/parameters/MinDDPages'
+        - $ref: '#/components/parameters/MinDDDofollow'
+        - $ref: '#/components/parameters/MinDDEdu'
+        - $ref: '#/components/parameters/MinDDGov'
+        - $ref: '#/components/parameters/MinSemTraffic'
+        - $ref: '#/components/parameters/MinSemRank'
+        - $ref: '#/components/parameters/MaxSemRank'
+        - $ref: '#/components/parameters/MinSemLinks'
+        - $ref: '#/components/parameters/MinSemKeywords'
+        - $ref: '#/components/parameters/MinAge'
+        - $ref: '#/components/parameters/MaxAge'
+        - $ref: '#/components/parameters/MinNameLength'
+        - $ref: '#/components/parameters/MaxNameLength'
+        - $ref: '#/components/parameters/ContainsLetters'
+        - $ref: '#/components/parameters/ContainsNumbers'
+        - $ref: '#/components/parameters/ContainsHyphen'
+        - $ref: '#/components/parameters/MinPrice'
+        - $ref: '#/components/parameters/MaxPrice'
+        - $ref: '#/components/parameters/MinBids'
+        - $ref: '#/components/parameters/MinAuctionTraffic'
+        - $ref: '#/components/parameters/MinValuation'
+        - $ref: '#/components/parameters/MinRevenue'
+        - $ref: '#/components/parameters/AuctionType'
+        - $ref: '#/components/parameters/GodaddyListingType'
+        - $ref: '#/components/parameters/AuctionEnd'
+        - $ref: '#/components/parameters/SpecialOption'
+      responses:
+        '200':
+          $ref: '#/components/responses/TextSearchSuccess'
+        '400':
+          $ref: '#/components/responses/TextBadRequest'
+        '401':
+          $ref: '#/components/responses/TextUnauthorized'
+        '403':
+          $ref: '#/components/responses/TextForbidden'
+        '405':
+          $ref: '#/components/responses/TextMethodNotAllowed'
+        '413':
+          $ref: '#/components/responses/TextPayloadTooLarge'
+        '422':
+          $ref: '#/components/responses/TextValidationFailed'
+        '429':
+          $ref: '#/components/responses/TextRateOrCreditLimit'
+        '500':
+          $ref: '#/components/responses/TextInternalError'
+        '503':
+          $ref: '#/components/responses/TextUnavailable'
+    post:
+      tags:
+        - Domain Search
+      operationId: searchDomainsTextPost
+      summary: Search domains and return one domain per line
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TextSearchRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TextSearchRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/TextSearchSuccess'
+        '400':
+          $ref: '#/components/responses/TextBadRequest'
+        '401':
+          $ref: '#/components/responses/TextUnauthorized'
+        '403':
+          $ref: '#/components/responses/TextForbidden'
+        '405':
+          $ref: '#/components/responses/TextMethodNotAllowed'
+        '413':
+          $ref: '#/components/responses/TextPayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/TextUnsupportedMediaType'
+        '422':
+          $ref: '#/components/responses/TextValidationFailed'
+        '429':
+          $ref: '#/components/responses/TextRateOrCreditLimit'
+        '500':
+          $ref: '#/components/responses/TextInternalError'
+        '503':
+          $ref: '#/components/responses/TextUnavailable'
+  /api/v1/meta.php:
+    get:
+      tags:
+        - Domain Search
+      operationId: getDomainSearchMetadata
+      summary: Get API v1 capabilities, limits, and supported values
+      security: []
+      responses:
+        '200':
+          description: Current public API metadata.
+          headers:
+            X-EED-API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metadata'
+        '405':
+          description: GET is required.
+          headers:
+            Allow:
+              $ref: '#/components/headers/AllowGet'
+            X-EED-API-Version:
+              $ref: '#/components/headers/ApiVersion'
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v1/openapi.php:
+    get:
+      tags:
+        - Domain Search
+      operationId: getDomainSearchOpenApi
+      summary: Download this OpenAPI 3.1 contract
+      security: []
+      responses:
+        '200':
+          description: OpenAPI 3.1 YAML document.
+          content:
+            application/yaml:
+              schema:
+                type: string
+        '405':
+          description: GET is required.
+          headers:
+            Allow:
+              $ref: '#/components/headers/AllowGet'
+          content:
+            text/plain:
+              schema:
+                type: string
+        '503':
+          description: The contract file is unavailable.
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: EED API key
+      description: Recommended. The key starts with `eed_live_`.
+    EedApiKey:
+      type: apiKey
+      in: header
+      name: X-EED-API-Key
+  parameters:
+    Q:
+      name: q
+      in: query
+      schema:
+        type: string
+        maxLength: 120
+      description: Search text or a complete domain name.
+    Keyword:
+      name: keyword
+      in: query
+      schema:
+        type: string
+        maxLength: 120
+      description: Alias for q. If both are supplied, their values must match.
+    Source:
+      name: source
+      in: query
+      schema:
+        $ref: '#/components/schemas/Source'
+    Type:
+      name: type
+      in: query
+      schema:
+        $ref: '#/components/schemas/Source'
+      description: Alias for source. If both are supplied, their values must match.
+    Provider:
+      name: provider
+      in: query
+      schema:
+        $ref: '#/components/schemas/Provider'
+    Tld:
+      name: tld
+      in: query
+      schema:
+        type: string
+        maxLength: 512
+        pattern: '^\s*(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?))*(?:\s*,\s*(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?))*){0,49}\s*$'
+      description: One to 50 comma-separated ASCII TLD values, each at most 253 characters, without leading dots or empty entries. Whitespace around separators is allowed.
+      example: com,net,co.uk
+    Sort:
+      name: sort
+      in: query
+      schema:
+        $ref: '#/components/schemas/Sort'
+    Dir:
+      name: dir
+      in: query
+      schema:
+        $ref: '#/components/schemas/Direction'
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    JsonPageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 500
+        default: 100
+    JsonLimit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 500
+      description: Alias for pageSize. If both are supplied, their values must match.
+    TextPageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 10000
+        default: 1000
+    TextLimit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 10000
+      description: Alias for pageSize. If both are supplied, their values must match.
+    MinTF:
+      name: minTF
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxTF:
+      name: maxTF
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinCF:
+      name: minCF
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxCF:
+      name: maxCF
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinBL:
+      name: minBL
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinRD:
+      name: minRD
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinTTF:
+      name: minTTF
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    TtfTopic:
+      name: ttfTopic
+      in: query
+      schema:
+        type: string
+        maxLength: 180
+      description: Case-insensitive Majestic topical category. Requires minTTF.
+    MinMajEdu:
+      name: minMajEdu
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinMajGov:
+      name: minMajGov
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinMajIPs:
+      name: minMajIPs
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinDA:
+      name: minDA
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxDA:
+      name: maxDA
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinPA:
+      name: minPA
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxPA:
+      name: maxPA
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxSpam:
+      name: maxSpam
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinMozRank:
+      name: minMozRank
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinMozTrust:
+      name: minMozTrust
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinDDLinks:
+      name: minDDLinks
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinDDPages:
+      name: minDDPages
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinDDDofollow:
+      name: minDDDofollow
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinDDEdu:
+      name: minDDEdu
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinDDGov:
+      name: minDDGov
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinSemTraffic:
+      name: minSemTraffic
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinSemRank:
+      name: minSemRank
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxSemRank:
+      name: maxSemRank
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinSemLinks:
+      name: minSemLinks
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinSemKeywords:
+      name: minSemKeywords
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinAge:
+      name: minAge
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxAge:
+      name: maxAge
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinNameLength:
+      name: minNameLength
+      in: query
+      schema:
+        $ref: '#/components/schemas/LabelLength'
+    MaxNameLength:
+      name: maxNameLength
+      in: query
+      schema:
+        $ref: '#/components/schemas/LabelLength'
+    ContainsLetters:
+      name: containsLetters
+      in: query
+      schema:
+        $ref: '#/components/schemas/YesNo'
+    ContainsNumbers:
+      name: containsNumbers
+      in: query
+      schema:
+        $ref: '#/components/schemas/YesNo'
+    ContainsHyphen:
+      name: containsHyphen
+      in: query
+      schema:
+        $ref: '#/components/schemas/YesNo'
+    MinPrice:
+      name: minPrice
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MaxPrice:
+      name: maxPrice
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinBids:
+      name: minBids
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinAuctionTraffic:
+      name: minAuctionTraffic
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinValuation:
+      name: minValuation
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    MinRevenue:
+      name: minRevenue
+      in: query
+      schema:
+        $ref: '#/components/schemas/NonNegativeNumber'
+    AuctionType:
+      name: auctionType
+      in: query
+      schema:
+        $ref: '#/components/schemas/AuctionType'
+    GodaddyListingType:
+      name: godaddyListingType
+      in: query
+      schema:
+        $ref: '#/components/schemas/GodaddyListingType'
+    AuctionEnd:
+      name: auctionEnd
+      in: query
+      schema:
+        $ref: '#/components/schemas/AuctionEnd'
+    SpecialOption:
+      name: specialOption
+      in: query
+      schema:
+        $ref: '#/components/schemas/SpecialOption'
+    IncludeRegisterLinks:
+      name: includeRegisterLinks
+      in: query
+      description: Add a registrar URL to expired-domain JSON results. Not accepted by the text endpoint.
+      schema:
+        type: boolean
+        default: false
+    Registrar:
+      name: registrar
+      in: query
+      schema:
+        $ref: '#/components/schemas/Registrar'
+      description: Used only when includeRegisterLinks is true.
+  schemas:
+    Source:
+      type: string
+      description: |
+        Request inventory selector. `closeout` selects GoDaddy closeout auction
+        listings, whose response `sourceType` remains `auction`; `all` and
+        `closeout` are therefore never returned as response source types.
+      enum:
+        - all
+        - auction
+        - closeout
+        - bin
+        - expiring
+        - expired
+      default: all
+    Provider:
+      type: string
+      description: Canonical provider filter key. The current list is also published by `/api/v1/meta.php`.
+      enum:
+        - afternic
+        - atom
+        - auda
+        - cnnic
+        - domainlore
+        - dropcatch
+        - dynadot
+        - gname
+        - godaddy
+        - internetnz
+        - internetstiftelsen
+        - namecheap
+        - namesilo
+        - nominet
+        - registro-it
+        - registry-hu
+        - registry-trabis
+        - sav
+        - sedo
+        - snapnames
+        - spaceship
+        - expired-import
+    Sort:
+      type: string
+      enum:
+        - quality
+        - domain
+        - source
+        - majTF
+        - majCF
+        - majBL
+        - majRD
+        - mozDA
+        - mozPA
+        - ddLinksIn
+        - ddPages
+        - age
+        - length
+        - semTraffic
+        - semRank
+        - expires
+        - price
+      default: quality
+    Direction:
+      type: string
+      enum:
+        - asc
+        - desc
+    NonNegativeNumber:
+      type: number
+      minimum: 0
+    LabelLength:
+      type: integer
+      minimum: 1
+      maximum: 63
+    YesNo:
+      type: string
+      enum:
+        - 'yes'
+        - 'no'
+    AuctionType:
+      type: string
+      enum:
+        - bid
+        - buy_now
+        - offer
+        - closeout
+    GodaddyListingType:
+      type: string
+      enum:
+        - expiry_auction
+        - closeout
+        - buy_now
+        - offer
+        - bid
+    AuctionEnd:
+      type: string
+      enum:
+        - today
+        - week
+      description: UTC window. Supplying this selects auction inventory.
+    SpecialOption:
+      type: string
+      enum:
+        - new_today
+        - expiring_today
+      description: Rolling 24-hour window.
+    Registrar:
+      type: string
+      description: |
+        Approved registrar used to build optional expired-domain registration
+        links. If omitted, the service's current default registrar is used.
+      enum:
+        - namecheap.com
+        - godaddy.com
+        - dynadot.com
+        - porkbun.com
+        - namesilo.com
+        - gandi.net
+        - cloudflare.com
+    Metadata:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - version
+        - enabled
+        - authentication
+        - endpoints
+        - limits
+        - sources
+        - providers
+        - registrars
+        - sorts
+        - directions
+        - filters
+      properties:
+        ok:
+          type: boolean
+          const: true
+        version:
+          type: string
+          const: '1'
+        enabled:
+          type: boolean
+          description: Whether API access is administratively enabled. This is capability metadata, not a dependency health check.
+        authentication:
+          type: object
+          additionalProperties: false
+          required:
+            - headers
+            - queryStringKeys
+            - requestBodyKeys
+          properties:
+            headers:
+              type: array
+              minItems: 2
+              items:
+                type: string
+              examples:
+                - ['Authorization: Bearer <key>', 'X-EED-API-Key: <key>']
+            queryStringKeys:
+              type: boolean
+              const: false
+            requestBodyKeys:
+              type: boolean
+              const: false
+        endpoints:
+          type: object
+          additionalProperties: false
+          required:
+            - json
+            - text
+            - metadata
+            - openapi
+          properties:
+            json:
+              type: string
+              const: /api/v1/domain-search.php
+            text:
+              type: string
+              const: /api/v1/domain-search.txt.php
+            metadata:
+              type: string
+              const: /api/v1/meta.php
+            openapi:
+              type: string
+              const: /api/v1/openapi.php
+        limits:
+          type: object
+          additionalProperties: false
+          required:
+            - dailySearchLimit
+            - dailyAttemptLimit
+            - jsonDefaultPageSize
+            - jsonMaximumPageSize
+            - textDefaultPageSize
+            - textMaximumPageSize
+            - resultWindow
+            - maximumQueryStringBytes
+            - maximumRequestBodyBytes
+            - maximumParameters
+            - requestsPerSecondPerKey
+            - requestsPerSecondPerMember
+            - requestsPerSecondPerIp
+            - globalRequestsPerSecond
+            - maximumActiveKeys
+            - manticoreQueryTimeoutMs
+          properties:
+            dailySearchLimit:
+              type: integer
+              minimum: 0
+              maximum: 1000000
+              description: Configured API-only allowance per Agency member per UTC day, shared by all of the member's keys. Zero temporarily stops searches.
+            dailyAttemptLimit:
+              type: integer
+              minimum: 1
+              maximum: 2000000
+              description: Safety ceiling for requests that reach the search backend, including failed attempts. This does not change billable/search-credit usage.
+            jsonDefaultPageSize:
+              type: integer
+              minimum: 1
+            jsonMaximumPageSize:
+              type: integer
+              minimum: 1
+            textDefaultPageSize:
+              type: integer
+              minimum: 1
+            textMaximumPageSize:
+              type: integer
+              minimum: 1
+            resultWindow:
+              type: integer
+              minimum: 1
+            maximumQueryStringBytes:
+              type: integer
+              const: 8192
+            maximumRequestBodyBytes:
+              type: integer
+              const: 32768
+            maximumParameters:
+              type: integer
+              const: 80
+            requestsPerSecondPerKey:
+              type: integer
+              minimum: 1
+            requestsPerSecondPerMember:
+              type: integer
+              minimum: 1
+            requestsPerSecondPerIp:
+              type: integer
+              minimum: 1
+            globalRequestsPerSecond:
+              type: integer
+              minimum: 1
+            maximumActiveKeys:
+              type: integer
+              minimum: 1
+            manticoreQueryTimeoutMs:
+              type: integer
+              minimum: 1
+        sources:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Source'
+        providers:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Provider'
+        registrars:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Registrar'
+        sorts:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Sort'
+        directions:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Direction'
+        filters:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+    SearchCriteria:
+      type: object
+      properties:
+        q:
+          type: string
+          maxLength: 120
+        keyword:
+          type: string
+          maxLength: 120
+          description: Alias for q. If both are supplied, their values must match.
+        source:
+          $ref: '#/components/schemas/Source'
+        type:
+          allOf:
+            - $ref: '#/components/schemas/Source'
+          description: Alias for source. If both are supplied, their values must match.
+        provider:
+          $ref: '#/components/schemas/Provider'
+        tld:
+          type: string
+          maxLength: 512
+          pattern: '^\s*(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?))*(?:\s*,\s*(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)(?:\.(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?))*){0,49}\s*$'
+          description: One to 50 comma-separated ASCII TLD values, each at most 253 characters, without leading dots or empty entries. Whitespace around separators is allowed.
+        sort:
+          $ref: '#/components/schemas/Sort'
+        dir:
+          $ref: '#/components/schemas/Direction'
+        minTF:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        maxTF:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minCF:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        maxCF:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minBL:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minRD:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minTTF:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        ttfTopic:
+          type: string
+          maxLength: 180
+        minMajEdu:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minMajGov:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minMajIPs:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minDA:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        maxDA:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minPA:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        maxPA:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        maxSpam:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minMozRank:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minMozTrust:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minDDLinks:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minDDPages:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minDDDofollow:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minDDEdu:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minDDGov:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minSemTraffic:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minSemRank:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        maxSemRank:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minSemLinks:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minSemKeywords:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minAge:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        maxAge:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minNameLength:
+          $ref: '#/components/schemas/LabelLength'
+        maxNameLength:
+          $ref: '#/components/schemas/LabelLength'
+        containsLetters:
+          $ref: '#/components/schemas/YesNo'
+        containsNumbers:
+          $ref: '#/components/schemas/YesNo'
+        containsHyphen:
+          $ref: '#/components/schemas/YesNo'
+        minPrice:
+          allOf:
+            - $ref: '#/components/schemas/NonNegativeNumber'
+          description: Minimum current listing or bid price in USD.
+        maxPrice:
+          allOf:
+            - $ref: '#/components/schemas/NonNegativeNumber'
+          description: Maximum current listing or bid price in USD.
+        minBids:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minAuctionTraffic:
+          $ref: '#/components/schemas/NonNegativeNumber'
+        minValuation:
+          allOf:
+            - $ref: '#/components/schemas/NonNegativeNumber'
+          description: Minimum provider appraisal in USD.
+        minRevenue:
+          allOf:
+            - $ref: '#/components/schemas/NonNegativeNumber'
+          description: Minimum provider-reported monthly parking revenue in USD.
+        auctionType:
+          $ref: '#/components/schemas/AuctionType'
+        godaddyListingType:
+          $ref: '#/components/schemas/GodaddyListingType'
+        auctionEnd:
+          $ref: '#/components/schemas/AuctionEnd'
+        specialOption:
+          $ref: '#/components/schemas/SpecialOption'
+    JsonSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/SearchCriteria'
+        - type: object
+          properties:
+            page:
+              type: integer
+              minimum: 1
+              default: 1
+            pageSize:
+              type: integer
+              minimum: 1
+              maximum: 500
+              default: 100
+            limit:
+              type: integer
+              minimum: 1
+              maximum: 500
+              description: Alias for pageSize. If both are supplied, their values must match.
+            includeRegisterLinks:
+              type: boolean
+              default: false
+            registrar:
+              $ref: '#/components/schemas/Registrar'
+      unevaluatedProperties: false
+    TextSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/SearchCriteria'
+        - type: object
+          properties:
+            page:
+              type: integer
+              minimum: 1
+              default: 1
+            pageSize:
+              type: integer
+              minimum: 1
+              maximum: 10000
+              default: 1000
+            limit:
+              type: integer
+              minimum: 1
+              maximum: 10000
+              description: Alias for pageSize. If both are supplied, their values must match.
+      unevaluatedProperties: false
+    SortResult:
+      type: object
+      additionalProperties: false
+      required:
+        - key
+        - dir
+      properties:
+        key:
+          $ref: '#/components/schemas/Sort'
+        dir:
+          $ref: '#/components/schemas/Direction'
+    Credits:
+      type: object
+      additionalProperties: false
+      required:
+        - charged
+        - dailySearches
+        - dailySearchLimit
+        - dailySearchRemaining
+        - dailyResetTime
+      properties:
+        charged:
+          type: integer
+          const: 1
+        dailySearches:
+          type: integer
+          minimum: 0
+        dailySearchLimit:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+          description: Configured API-only allowance for the Agency member.
+        dailySearchRemaining:
+          type: integer
+          minimum: 0
+        dailyResetTime:
+          type:
+            - string
+            - 'null'
+          format: date-time
+    ProviderResult:
+      type: object
+      additionalProperties: false
+      required:
+        - key
+        - name
+        - listingUrl
+      properties:
+        key:
+          type: string
+          pattern: '^(?:[a-z0-9]+(?:-[a-z0-9]+)*)?$'
+          description: Canonical provider filter key. Empty only when an ingested provider is not yet recognised.
+        name:
+          type: string
+          description: Human-readable display label. Use `key`, not this label, for matching and persistence.
+        listingUrl:
+          type: string
+          description: |
+            Absolute HTTPS provider destination, or an empty string when none is
+            available. It may include EED attribution or affiliate parameters
+            and must not be treated as a stable identifier.
+    MajesticTopic:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - minor
+        - val
+      properties:
+        name:
+          type: string
+        minor:
+          type: string
+        val:
+          type: integer
+          minimum: 0
+    MajesticMetrics:
+      type: object
+      additionalProperties: false
+      required:
+        - tf
+        - cf
+        - backlinks
+        - refDomains
+        - ratio
+        - edu
+        - gov
+        - ips
+        - subnets
+        - topics
+        - language
+      properties:
+        tf:
+          type: number
+        cf:
+          type: number
+        backlinks:
+          type: integer
+        refDomains:
+          type: integer
+        ratio:
+          type: number
+        edu:
+          type: integer
+        gov:
+          type: integer
+        ips:
+          type: integer
+        subnets:
+          type: integer
+        topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/MajesticTopic'
+        language:
+          type: string
+    MozMetrics:
+      type: object
+      additionalProperties: false
+      required:
+        - links
+        - da
+        - pa
+        - rank
+        - spam
+        - trust
+      properties:
+        links:
+          type: integer
+        da:
+          type: number
+        pa:
+          type: number
+        rank:
+          type: number
+        spam:
+          type: number
+        trust:
+          type: number
+    DomDetailerMetrics:
+      type: object
+      additionalProperties: false
+      required:
+        - linksIn
+        - pages
+        - dofollow
+        - edu
+        - gov
+      properties:
+        linksIn:
+          type: integer
+        pages:
+          type: integer
+        dofollow:
+          type: integer
+        edu:
+          type: integer
+        gov:
+          type: integer
+    SemrushMetrics:
+      type: object
+      additionalProperties: false
+      required:
+        - traffic
+        - rank
+        - links
+        - keywords
+        - price
+      properties:
+        traffic:
+          type: number
+        rank:
+          type: number
+        links:
+          type: number
+        keywords:
+          type: number
+        price:
+          type: string
+          description: Provider-formatted USD traffic-value estimate for display; not a domain listing price.
+    WaybackMetrics:
+      type: object
+      additionalProperties: false
+      required:
+        - snapshots
+        - firstSnapshotAt
+        - lastSnapshotAt
+      properties:
+        snapshots:
+          type: integer
+        firstSnapshotAt:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: RFC 3339 timestamp in UTC.
+        lastSnapshotAt:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: RFC 3339 timestamp in UTC.
+    Metrics:
+      type: object
+      additionalProperties: false
+      required:
+        - majestic
+        - moz
+        - domDetailer
+        - semrush
+        - wayback
+      properties:
+        majestic:
+          $ref: '#/components/schemas/MajesticMetrics'
+        moz:
+          $ref: '#/components/schemas/MozMetrics'
+        domDetailer:
+          $ref: '#/components/schemas/DomDetailerMetrics'
+        semrush:
+          $ref: '#/components/schemas/SemrushMetrics'
+        wayback:
+          $ref: '#/components/schemas/WaybackMetrics'
+    AuctionResult:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - bidCount
+        - traffic
+        - valuation
+        - revenue
+        - currency
+        - revenuePeriod
+      properties:
+        type:
+          type: string
+        bidCount:
+          type: integer
+        traffic:
+          type: number
+          description: Provider-reported monthly traffic or visitors; zero can mean unavailable.
+        valuation:
+          type: number
+          description: Provider appraisal in the currency named by `currency`; zero can mean unavailable.
+        revenue:
+          type: number
+          description: Provider-reported estimated parking revenue for `revenuePeriod`; zero can mean unavailable.
+        currency:
+          type: string
+          const: USD
+        revenuePeriod:
+          type: string
+          const: month
+    DomainResult:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - domain
+        - tld
+        - sourceType
+        - provider
+        - price
+        - priceCurrency
+        - expires
+        - qualityScore
+        - age
+        - metrics
+        - auction
+      properties:
+        id:
+          type: string
+          description: Opaque inventory-row identifier. Do not parse it or use it as the permanent identity of a domain.
+        domain:
+          type: string
+        tld:
+          type: string
+        sourceType:
+          type: string
+          description: Canonical inventory class. Request-only selectors `all` and `closeout` are never returned.
+          enum:
+            - auction
+            - bin
+            - expiring
+            - expired
+        provider:
+          $ref: '#/components/schemas/ProviderResult'
+        price:
+          type:
+            - number
+            - 'null'
+          description: Current listing or bid price in `priceCurrency`; null when unavailable or not applicable.
+        priceCurrency:
+          type: string
+          const: USD
+        expires:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: |
+            Best source event timestamp in RFC 3339 UTC: normally expected drop
+            time for expiring inventory, auction end or closeout deadline for
+            auction inventory, or listing/registration expiry for buy-now
+            inventory. Null when unavailable and for expired inventory.
+        qualityScore:
+          type:
+            - number
+            - 'null'
+        age:
+          type: number
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        auction:
+          $ref: '#/components/schemas/AuctionResult'
+        registerUrl:
+          type: string
+          format: uri
+          description: |
+            Registrar destination emitted only for expired results when
+            includeRegisterLinks is true. It may contain EED attribution or
+            affiliate parameters, and can be a registrar landing page.
+    JsonSearchSuccess:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - requestId
+        - page
+        - pageSize
+        - count
+        - hasMore
+        - nextPage
+        - truncated
+        - pagination
+        - backend
+        - index
+        - source
+        - sort
+        - credits
+        - results
+      properties:
+        ok:
+          type: boolean
+          const: true
+        requestId:
+          type: string
+          format: uuid
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 500
+        count:
+          type: integer
+          minimum: 0
+          maximum: 500
+        hasMore:
+          type: boolean
+        nextPage:
+          type:
+            - integer
+            - 'null'
+          minimum: 2
+        truncated:
+          type: boolean
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        backend:
+          type: string
+          const: manticore
+        index:
+          $ref: '#/components/schemas/IndexMetadata'
+        source:
+          $ref: '#/components/schemas/Source'
+        sort:
+          $ref: '#/components/schemas/SortResult'
+        credits:
+          $ref: '#/components/schemas/Credits'
+        results:
+          type: array
+          maxItems: 500
+          items:
+            $ref: '#/components/schemas/DomainResult'
+    Pagination:
+      type: object
+      additionalProperties: false
+      required:
+        - page
+        - pageSize
+        - count
+        - hasMore
+        - nextPage
+        - truncated
+        - resultWindowMax
+        - exactTotal
+        - total
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          minimum: 1
+        count:
+          type: integer
+          minimum: 0
+        hasMore:
+          type: boolean
+        nextPage:
+          type:
+            - integer
+            - 'null'
+        truncated:
+          type: boolean
+        resultWindowMax:
+          type: integer
+          minimum: 1
+        exactTotal:
+          type: boolean
+        total:
+          type:
+            - integer
+            - 'null'
+          minimum: 0
+    IndexMetadata:
+      type: object
+      additionalProperties: false
+      required:
+        - backend
+        - lastSyncAt
+        - syncInProgress
+      properties:
+        backend:
+          type: string
+          const: manticore
+        lastSyncAt:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        syncInProgress:
+          type: boolean
+    ErrorDetail:
+      type: object
+      additionalProperties: false
+      required:
+        - field
+        - code
+        - message
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+    Error:
+      type: object
+      additionalProperties: false
+      required:
+        - ok
+        - error
+        - message
+        - requestId
+      properties:
+        ok:
+          type: boolean
+          const: false
+        error:
+          type: string
+        message:
+          type: string
+        requestId:
+          type: string
+          format: uuid
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+        scope:
+          type: string
+          description: Capacity scope that rejected a rate-limited request.
+          enum:
+            - key
+            - member
+            - ip
+            - global
+  headers:
+    ApiVersion:
+      description: EED API major version.
+      schema:
+        type: string
+        const: '1'
+    RequestId:
+      description: Unique request identifier.
+      schema:
+        type: string
+        format: uuid
+    RateLimitLimit:
+      description: Per-key allowance for the current short rate window.
+      schema:
+        type: integer
+        minimum: 0
+    RateLimitRemaining:
+      description: Requests remaining in the current short rate window.
+      schema:
+        type: integer
+        minimum: 0
+    RateLimitReset:
+      description: Unix timestamp when the current short rate window resets.
+      schema:
+        type: integer
+        minimum: 0
+    DailyLimit:
+      description: Configured API-only daily allowance for the Agency member.
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 1000000
+    DailyUsed:
+      description: Successful API searches used by the Agency member in the current UTC day.
+      schema:
+        type: integer
+        minimum: 0
+    DailyRemaining:
+      description: Successful API searches remaining for the Agency member in the current UTC day.
+      schema:
+        type: integer
+        minimum: 0
+    DailyReset:
+      description: RFC 3339 UTC timestamp at which the daily API allowance resets.
+      schema:
+        type: string
+        format: date-time
+    RetryAfter:
+      description: Seconds until the client should retry.
+      schema:
+        type: integer
+        minimum: 1
+    WwwAuthenticate:
+      description: Bearer authentication challenge.
+      schema:
+        type: string
+        const: 'Bearer realm="Easy Expired Domains API"'
+    AllowSearchMethods:
+      description: Methods accepted by a search endpoint.
+      schema:
+        type: string
+        const: 'GET, POST'
+    AllowGet:
+      description: The endpoint accepts GET only.
+      schema:
+        type: string
+        const: GET
+    Page:
+      schema:
+        type: integer
+        minimum: 1
+    PageSize:
+      schema:
+        type: integer
+        minimum: 1
+    ResultCount:
+      schema:
+        type: integer
+        minimum: 0
+    HasMore:
+      schema:
+        type: boolean
+    NextPage:
+      description: Omitted when there is no next page.
+      schema:
+        type: integer
+        minimum: 2
+    ResultsTruncated:
+      description: Whether the 10,000-row result window prevents complete enumeration.
+      schema:
+        type: boolean
+    IndexLastSync:
+      description: Latest sync timestamp reported by the local Manticore state file, when available.
+      schema:
+        type: string
+        format: date-time
+  responses:
+    JsonSearchSuccess:
+      description: Successful JSON search. One API search was charged.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        X-EED-Daily-Limit:
+          $ref: '#/components/headers/DailyLimit'
+        X-EED-Daily-Used:
+          $ref: '#/components/headers/DailyUsed'
+        X-EED-Daily-Remaining:
+          $ref: '#/components/headers/DailyRemaining'
+        X-EED-Daily-Reset:
+          $ref: '#/components/headers/DailyReset'
+        X-Page:
+          $ref: '#/components/headers/Page'
+        X-Page-Size:
+          $ref: '#/components/headers/PageSize'
+        X-Result-Count:
+          $ref: '#/components/headers/ResultCount'
+        X-Has-More:
+          $ref: '#/components/headers/HasMore'
+        X-Next-Page:
+          $ref: '#/components/headers/NextPage'
+        X-Results-Truncated:
+          $ref: '#/components/headers/ResultsTruncated'
+        X-Index-Last-Sync:
+          $ref: '#/components/headers/IndexLastSync'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/JsonSearchSuccess'
+    TextSearchSuccess:
+      description: Successful domain-only search. One API search was charged.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        X-EED-Daily-Limit:
+          $ref: '#/components/headers/DailyLimit'
+        X-EED-Daily-Used:
+          $ref: '#/components/headers/DailyUsed'
+        X-EED-Daily-Remaining:
+          $ref: '#/components/headers/DailyRemaining'
+        X-EED-Daily-Reset:
+          $ref: '#/components/headers/DailyReset'
+        X-Page:
+          $ref: '#/components/headers/Page'
+        X-Page-Size:
+          $ref: '#/components/headers/PageSize'
+        X-Result-Count:
+          $ref: '#/components/headers/ResultCount'
+        X-Has-More:
+          $ref: '#/components/headers/HasMore'
+        X-Next-Page:
+          $ref: '#/components/headers/NextPage'
+        X-Results-Truncated:
+          $ref: '#/components/headers/ResultsTruncated'
+        X-Index-Last-Sync:
+          $ref: '#/components/headers/IndexLastSync'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: |
+            example.com
+            example.net
+    BadRequest:
+      $ref: '#/components/responses/_JsonError400'
+    Unauthorized:
+      $ref: '#/components/responses/_JsonError401'
+    Forbidden:
+      $ref: '#/components/responses/_JsonError403'
+    MethodNotAllowed:
+      $ref: '#/components/responses/_JsonError405'
+    PayloadTooLarge:
+      $ref: '#/components/responses/_JsonError413'
+    UnsupportedMediaType:
+      $ref: '#/components/responses/_JsonError415'
+    ValidationFailed:
+      $ref: '#/components/responses/_JsonError422'
+    RateOrCreditLimit:
+      description: Short rate limit or daily search-credit limit reached.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalError:
+      $ref: '#/components/responses/_JsonError500'
+    Unavailable:
+      $ref: '#/components/responses/_JsonError503'
+    TextBadRequest:
+      $ref: '#/components/responses/_TextError400'
+    TextUnauthorized:
+      $ref: '#/components/responses/_TextError401'
+    TextForbidden:
+      $ref: '#/components/responses/_TextError403'
+    TextMethodNotAllowed:
+      $ref: '#/components/responses/_TextError405'
+    TextPayloadTooLarge:
+      $ref: '#/components/responses/_TextError413'
+    TextUnsupportedMediaType:
+      $ref: '#/components/responses/_TextError415'
+    TextValidationFailed:
+      $ref: '#/components/responses/_TextError422'
+    TextRateOrCreditLimit:
+      description: Short rate limit or daily search-credit limit reached.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'rate_limited: Too many API requests.'
+    TextInternalError:
+      $ref: '#/components/responses/_TextError500'
+    TextUnavailable:
+      $ref: '#/components/responses/_TextError503'
+    _JsonError400:
+      description: Invalid or malformed request.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError401:
+      description: Missing or invalid API key.
+      headers:
+        WWW-Authenticate:
+          $ref: '#/components/headers/WwwAuthenticate'
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError403:
+      description: Agency entitlement or IP allowlist denied the request.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError405:
+      description: Method not allowed.
+      headers:
+        Allow:
+          $ref: '#/components/headers/AllowSearchMethods'
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError415:
+      description: Unsupported POST media type.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError413:
+      description: Query string or request body exceeds the API size limit.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError422:
+      description: Strict parameter validation failed.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError500:
+      description: Unexpected domain search failure.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _JsonError503:
+      description: API dependency or required Manticore capability unavailable.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    _TextError400:
+      description: Invalid or malformed request.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'invalid_json: The JSON request body is malformed.'
+    _TextError401:
+      description: Missing or invalid API key.
+      headers:
+        WWW-Authenticate:
+          $ref: '#/components/headers/WwwAuthenticate'
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'invalid_api_key: The API key is invalid.'
+    _TextError403:
+      description: Agency entitlement or IP allowlist denied the request.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'ip_not_allowed: This key is not allowed from the current IP.'
+    _TextError405:
+      description: Method not allowed.
+      headers:
+        Allow:
+          $ref: '#/components/headers/AllowSearchMethods'
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'method_not_allowed: Use GET or POST.'
+    _TextError415:
+      description: Unsupported POST media type.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'unsupported_media_type: Use application/json or application/x-www-form-urlencoded.'
+    _TextError413:
+      description: Query string or request body exceeds the API size limit.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'body_too_large: The request body is too large.'
+    _TextError422:
+      description: Strict parameter validation failed.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'validation_failed: The maximum page size for this format is 10000.'
+    _TextError500:
+      description: Unexpected domain search failure.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'domain_query_failed: Unable to complete the domain search right now.'
+    _TextError503:
+      description: API dependency or required Manticore capability unavailable.
+      headers:
+        X-EED-API-Version:
+          $ref: '#/components/headers/ApiVersion'
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        X-RateLimit-Limit:
+          $ref: '#/components/headers/RateLimitLimit'
+        X-RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimitRemaining'
+        X-RateLimit-Reset:
+          $ref: '#/components/headers/RateLimitReset'
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'index_capability_unavailable: A required search capability is temporarily unavailable.'
