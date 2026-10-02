@@ -19,6 +19,10 @@ This is the companion project for the **[SEOdev YouTube channel](https://www.you
 
 The app uses plain HTML/CSS/JavaScript, Node's built-in HTTP server and fetch, and **zero third-party runtime dependencies**. No `npm install` or build step is needed. Live searches require internet access and your own eligible EED API access; obtain/check that through [EED API access](https://easyexpireddomains.com/api-access). Each successful search page consumes your API allowance. Your key is entered inside the app and kept in session memory.
 
+## Expired Domain Scraper
+
+If you prefer to scrape authority websites for expired domains then you may prefer something like Domain Hunter Gatherer Pro which is a powerful tool for [scraping expired domains](https://domainhuntergatherer.com) from almost any website. Domain Hunter gatherer Pro also includes access to Easy Expired Domains Pro so you will be able to create this domain panel using a DHG Pro account as well.
+
 ## Download and run
 
 On this repository's GitHub page, click **Code → Download ZIP**, then extract the ZIP. Open the extracted folder containing `server.mjs` and `Start Goblin.cmd`.
