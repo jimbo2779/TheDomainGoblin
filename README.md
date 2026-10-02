@@ -7,7 +7,6 @@ A colourful local domain-research console powered by the [Easy Expired Domains (
 This is the companion project for the **[SEOdev YouTube channel](https://www.youtube.com/@SEOdev)**. It starts with an SEO-focused workflow: expiring domains aged at least five years, Trust Flow of 15 or more, and .com, .co.uk or .net names. You can edit the recipes to suit your own research.
 
 **Watch the walkthrough:** video coming soon. The link will be added here when the SEOdev video is published.
-<!-- Replace the previous line with: **Watch the walkthrough:** [Build and use The Domain Goblin](YOUR_VIDEO_URL) -->
 
 ## What it does
 
@@ -63,7 +62,7 @@ node server.mjs
 
 On macOS/Linux: `PORT=8788 node server.mjs`. The printed URL changes. Browser storage belongs to that origin, so a different port has separate saved work; use backup/restore to transfer it.
 
-## Your personalised recipes
+## Default search recipes
 
 | Recipe | API keyword | Shared API rules | Ordering |
 | --- | --- | --- | --- |
@@ -73,11 +72,11 @@ On macOS/Linux: `PORT=8788 node server.mjs`. The printed URL changes. Browser st
 
 Each preset is a separate query, sent only when you click Search. Keyword matching does not establish niche relevance. The contract does not document an OR expression for these three interests, so they are separate searches. You can edit the keyword to explore terms such as `link` or `rank`; each changed search costs another request if successful.
 
-**Full displayed domain length ≤25** is an additional local refinement, including dots and the TLD. This conservatively enforces your limit in addition to the API's name-length filter. It applies only to loaded rows, not the full inventory. The contract names API length as label length but does not specify Unicode/punycode treatment; the console makes no such assumption.
+**Full displayed domain length ≤25** is an additional local refinement, including dots and the TLD. This enforces the default length limit in addition to the API's name-length filter. It applies only to loaded rows, not the full inventory. The contract names API length as label length but does not specify Unicode/punycode treatment; the console makes no such assumption.
 
 Minimum QS, when selected, is explicitly a **refinement within loaded results**. There is no minimum-QS API parameter in the checked metadata. For high-QS research choose API quality sorting and search again, then refine locally. An empty refined page can have matches on later pages. Digits-only is a local ASCII check of the downloaded name after removing the returned TLD, including multi-part suffixes.
 
-Save edits, rename, duplicate or delete recipes in the sidebar. Reset restores the built-in recipe to its original defaults; for a custom recipe it reloads its last saved rules. Minimum TF/age and other original rules remain editable, as requested. Additional filters are under Advanced spells. Unset filters are omitted and invalid/contradictory combinations are rejected.
+Save edits, rename, duplicate or delete recipes in the sidebar. Reset restores the built-in recipe to its original defaults; for a custom recipe it reloads its last saved rules. Minimum TF/age and other default rules are editable. Additional filters are under Advanced spells. Unset filters are omitted and invalid/contradictory combinations are rejected.
 
 ## Results, allowance and accuracy
 
@@ -96,7 +95,7 @@ Presets, shortlist notes and historical listing snapshots/timestamps are saved i
 
 Use the Results/Shortlist tabs to compare rows. Exports offer visible loaded rows, selected loaded rows, or the entire shortlist. CSV protects spreadsheet formulas; JSON includes rules, fetch time, local sort/refinement scope and a partial flag when later pages may exist. Domain text contains unique domain names and also downloads a separate metadata JSON file (allow multiple downloads when your browser asks). None of these actions calls EED. The API's separate server-side text endpoint is not used; invoking it in a future extension would be another live request and consume allowance.
 
-**Print shortlist / PDF** prints a dedicated shortlist report through your browser's print dialog. **Offline shortlist HTML** downloads a self-contained report with notes, important metrics, timestamps and inline styling. It opens without internet and contains no key or live API controls. Your chosen research workflow does not require presentation slides or recording tools. Exported snapshots remain historical.
+**Print shortlist / PDF** prints a dedicated shortlist report through your browser's print dialog. **Offline shortlist HTML** downloads a self-contained report with notes, important metrics, timestamps and inline styling. It opens without internet and contains no key or live API controls. Exported snapshots remain historical.
 
 Use **JSON backup** to move presets, notes and shortlist to another computer/browser. Restore validates the entire file before replacing saved work; it never loads a key. Restore replaces existing saved work, so download a backup first if needed. There is a 10 MB restore limit, 100 presets and 5,000 shortlist domains. For compact, safe backups the stored/restored snapshots preserve the table metrics and links, rather than arbitrary raw API properties. Extended raw metrics are available in live-loaded details.
 
@@ -128,7 +127,7 @@ This is a local single-user app. Future public hosting requires HTTPS, separate 
 
 Run `node --test` (no installation needed). Offline tests check preset queries and validation, contract-shaped response adaptation, pagination stopping, missing versus zero metrics, multi-part digits-only scope, distinct listing preservation, key exclusion/redaction, safe CSV/HTML exports, backup validation, adapter header authentication and error handling with mocked fetch, and the real local server's asset/Host/Origin controls. Fixtures exist only under `test/` and never appear in the app.
 
-Build verification: all 9 checks passed using `node --test --test-isolation=none test/core.test.mjs`. The default runner's subprocess launch was blocked by this build workspace's sandbox (`spawn EPERM`); the single-process run exercises the same checks. Syntax checks also passed for server, adapter and browser modules. No interactive browser test was available in the build environment; use the checklist below.
+All 9 offline checks passed using `node --test --test-isolation=none test/core.test.mjs`. Syntax checks also passed for server, adapter and browser modules. Authenticated live searches and the interactive browser workflow were not verified during development; the checklist below covers those steps.
 
 Manual browser checklist, requiring your key for live steps:
 
@@ -139,19 +138,3 @@ Manual browser checklist, requiring your key for live steps:
 5. Export CSV, text + metadata, JSON, printable PDF and offline HTML. Open HTML offline, verify notes/metrics and UTC timestamps. Try backup and restore in a second browser/profile.
 6. With a deliberately invalid key, Search should show an actionable error; after a failed refresh old rows must be marked stale. Never share your key in chat.
 
-Authenticated live connection, your account's filter results and the interactive browser workflow cannot be confirmed until you use your real key. No live search was performed during development.
-
-## Publish your own copy on GitHub
-
-You can publish this source through your browser without installing Git:
-
-1. Sign in to GitHub and open [Create a new repository](https://github.com/new).
-2. Use **the-domain-goblin** as the repository name. Suggested description: **A colourful local EED API console for SEO domain research, shortlists and reports. Companion project for the SEOdev YouTube channel.**
-3. Choose **Public** so viewers can read the README and download the app. Leave the options to add a README, .gitignore and licence unset for this initial upload; the source already includes its README and .gitignore.
-4. Click **Create repository**, then use the **uploading an existing file** link (or **Add file → Upload files**).
-5. Drag in the source files and the complete `public` and `test` folders, preserving their folder structure. `README.md`, `server.mjs` and the other top-level source files should appear at the repository root. If using the prepared source ZIP, extract it first and upload its contents, rather than the ZIP itself. Upload `.gitignore` too; do not upload personal backups, reports or any key files.
-6. Enter **Initial release of The Domain Goblin** as the commit message and click **Commit changes**.
-7. In the repository's **About** area, use [SEOdev](https://www.youtube.com/@SEOdev) as the website link. Suggested topics: `seo`, `domains`, `expired-domains`, `eed`, `nodejs`, `domain-research`.
-8. When your video is published, edit the walkthrough line near the top of this README to link to it. Then put the GitHub repository URL in your video description.
-
-See GitHub's official guides to [creating a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository) and [uploading files](https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository).
